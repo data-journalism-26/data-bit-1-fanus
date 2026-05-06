@@ -62,8 +62,7 @@ The percentages shown represent symptom prevalence within each group. Values are
 ## Theoretical Reference
 
 - Fanon, Frantz (1961)  
-  *The Wretched of the Earth*  
-  (especially the chapter “Colonial War and Mental Disorders”)
+  *The Wretched of the Earth*
 
 ---
 

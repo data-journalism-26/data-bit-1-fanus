@@ -165,85 +165,64 @@ interactive_plot <- subplot(pp1, pp2, pp3, nrows = 1, shareY = TRUE, titleX = FA
   config(displayModeBar = FALSE, displaylogo = FALSE, responsive = TRUE)
 
 # -----------------------------
-# 5) Article wrapper and save as HTML
+# 5) Article wrapper and save as one self-contained HTML
 # -----------------------------
-page <- browsable(tagList(
-  tags$head(
-    tags$meta(charset = "utf-8"),
-    tags$meta(name = "viewport", content = "width=device-width, initial-scale=1"),
-    tags$style(HTML(paste0(
-      "html, body { margin:0; padding:0; background:", bg_col, "; color:", text_col, "; font-family:Georgia,'Times New Roman',serif; }",
-      "body { border-top:2px solid rgba(23,42,58,.9); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }",
-      ".wrap { max-width:820px; margin:0 auto; padding:54px 34px 52px 34px; }",
-      ".kicker { font-family:'Inter','Segoe UI',Arial,sans-serif; font-size:10.5px; text-transform:uppercase; letter-spacing:.13em; color:", muted_col, "; font-weight:700; margin-bottom:24px; }",
-      "h1 { font-family:'Inter','Segoe UI',Arial,sans-serif; font-size:44px; line-height:1.02; margin:0 0 10px 0; font-weight:850; letter-spacing:-.045em; color:", text_col, "; max-width:760px; }",
-      ".byline { font-family:'Inter','Segoe UI',Arial,sans-serif; color:", muted_col, "; font-size:12px; letter-spacing:.02em; margin-bottom:30px; }",
-      "p {font-size:18px; line-height:1.75; margin:0 0 22px 0; color:", text_col, "; text-align: justify; hyphens: auto;}",
-      "p:first-of-type::first-letter { float:left; font-family:Georgia,'Times New Roman',serif; font-size:58px; line-height:.86; padding-right:8px; color:", dep_col, "; }",
-      ".chart { width:100%; margin:34px 0 18px 0; }",
-      ".caption { font-family:'Inter','Segoe UI',Arial,sans-serif; color:", muted_col, "; font-size:11.5px; line-height:1.5; margin:0 0 30px 0; max-width:820px; }",
-      ".sources { font-family:'Inter','Segoe UI',Arial,sans-serif; border-top:1px solid rgba(23,42,58,.18); margin-top:34px; padding-top:16px; color:", muted_col, "; font-size:11.5px; line-height:1.55; max-width:820px; }",
-      ".sources strong { color:", text_col, "; }",
-      "@media (max-width: 800px) { .wrap { padding:36px 22px 42px 22px; } h1 { font-size:34px; } p { font-size:16px; line-height:1.68; } p:first-of-type::first-letter { font-size:46px; } }"
-    )))
-  ),
-  
-  div(class = "wrap",
-      div(class = "kicker", "Afghanistan · Neyazi et al. (2024) · n = 2,698 · DASS-21 survey"),
-      tags$h1("Layers of Oppression – Mental Health in Afghanistan"),
-      div(class = "byline", "Fanus Ghorjani · 06 May 2026"),
-      
-      tags$p("Oppression does not operate on a single level. It accumulates. Over time, it settles into different layers: material, social and psychological. In Afghanistan, decades of conflict, foreign intervention and economic instability have produced visible and less visible forms of control. These layers do not remain external. They shape how people live, relate and experience themselves. They shape the psyche."),
-      
-      tags$p("A recent study from Afghanistan shows that 72.05% of participants report symptoms of depression, 71.94% anxiety, and 66.49% high levels of stress. These numbers are not simply indicators of a health crisis. They show how deeply psychological distress has become embedded in everyday life. The chart breaks these results down into social layers, including gender, income, education and place of living."),
-      
-      tags$p("At first glance, one pattern dominates: levels of distress are high across all groups. Anxiety and depression rates remain around or above 70%, regardless of category. Mental distress is not confined to specific populations. It is widespread and shared."),
-      
-      div(class = "chart",
-          tags$iframe(
-            src = "chart.html",
-            title = "Interactive mental health visualization",
-            style = "width:100%; height:520px; border:0; display:block; overflow:hidden; background:#F7F3EE;",
-            scrolling = "no"
-          )
-      ),
-      div(class = "caption", HTML("<strong>Figure:</strong> Percentages show group share and symptom prevalence within each group. Groups may overlap; values are descriptive and not causal.")),
-      
-      tags$p("The study shows differences between gender and class, but they do not contradict the overall pattern; they layer and intensify it. Where structural pressure is greater, distress becomes more severe. This is where the metaphor of layers becomes critical."),
-      
-      tags$p("The chart shows how multiple forms of pressure accumulate: economic hardship, restricted rights, insecurity and uncertainty do not act in isolation, but build on top of one another. Psychological distress emerges not from a single cause, but from the weight of these combined conditions."),
-      
-      tags$p("Frantz Fanon’s analysis of colonial violence offers a way to understand this accumulation. His point is not only that oppression causes suffering. It is that it reorganizes the psyche. The experience of being controlled and exposed to unpredictable force produces internal tension, anger and a constant anticipation of threat."),
-      
-      tags$p("In this sense violence is not only external, but becomes internalized, layered into how people think, feel and respond to the world. This study does not describe a collection of individual cases, but points to a structured condition."),
-      
-      tags$p("Mental health in Afghanistan is not only a medical issue. It reflects a collective condition formed through the accumulation of these layers. The chart makes this visible: distress is everywhere and in some layers, it becomes more intense."),
-      
-      tags$p("In contexts where oppression is continuous, psychological disorder is not an exception, but an expected outcome. There can be no return to normal when instability itself is the norm. Illness persists because the conditions that produce it remain."),
-      
-      div(class = "sources",
-          HTML("<strong>Sources:</strong> Neyazi et al. (2024), <em>Depression, anxiety and stress among Afghans under Taliban government: a cross-sectional study</em>, <em>Discover Mental Health</em> 4:38, DOI: 10.1007/s44192-024-00090-5. Data shown are based on DASS-21 symptom categories, n = 2,698. Fanon, Frantz (1961/1963), <em>The Wretched of the Earth</em>, translated by Constance Farrington, Grove Press, chapter ‘Colonial War and Mental Disorders’."))
-  )
-))
+# IMPORTANT:
+# The article is attached directly to the Plotly htmlwidget with
+# prependContent() and appendContent(). Then saveWidget() saves the whole
+# thing as ONE self-contained HTML file. This avoids iframe/path/lib issues
+# while keeping hover interactivity.
 
-# Save the Plotly widget as its own page so htmlwidgets initializes cleanly.
-# index.html embeds this file via iframe, preserving hover/interactivity.
+article_css <- tags$head(
+  tags$meta(charset = "utf-8"),
+  tags$meta(name = "viewport", content = "width=device-width, initial-scale=1"),
+  tags$style(HTML(paste0(
+    "html, body { margin:0; padding:0; background:", bg_col, "; color:", text_col, "; font-family:Georgia,'Times New Roman',serif; }",
+    "body { border-top:2px solid rgba(23,42,58,.9); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }",
+    ".wrap { max-width:820px; margin:0 auto; padding:54px 34px 52px 34px; }",
+    ".kicker { font-family:'Inter','Segoe UI',Arial,sans-serif; font-size:10.5px; text-transform:uppercase; letter-spacing:.13em; color:", muted_col, "; font-weight:700; margin-bottom:24px; }",
+    "h1 { font-family:'Inter','Segoe UI',Arial,sans-serif; font-size:44px; line-height:1.02; margin:0 0 10px 0; font-weight:850; letter-spacing:-.045em; color:", text_col, "; max-width:760px; }",
+    ".byline { font-family:'Inter','Segoe UI',Arial,sans-serif; color:", muted_col, "; font-size:12px; letter-spacing:.02em; margin-bottom:30px; }",
+    "p {font-size:18px; line-height:1.75; margin:0 0 22px 0; color:", text_col, "; text-align: justify; hyphens: auto;}",
+    "p.first::first-letter { float:left; font-family:Georgia,'Times New Roman',serif; font-size:58px; line-height:.86; padding-right:8px; color:", dep_col, "; }",
+    ".chart-spacer { margin-top:34px; }",
+    ".caption { font-family:'Inter','Segoe UI',Arial,sans-serif; color:", muted_col, "; font-size:11.5px; line-height:1.5; margin:0 0 30px 0; max-width:820px; }",
+    ".sources { font-family:'Inter','Segoe UI',Arial,sans-serif; border-top:1px solid rgba(23,42,58,.18); margin-top:34px; padding-top:16px; color:", muted_col, "; font-size:11.5px; line-height:1.55; max-width:820px; }",
+    ".sources strong { color:", text_col, "; }",
+    ".plotly, .html-widget { width:100% !important; height:520px !important; margin:0 0 18px 0; }",
+    "@media (max-width: 800px) { .wrap { padding:36px 22px 42px 22px; } h1 { font-size:34px; } p { font-size:16px; line-height:1.68; } p.first::first-letter { font-size:46px; } .plotly, .html-widget { height:560px !important; } }"
+  )))
+)
+
+article_before <- div(class = "wrap",
+  div(class = "kicker", "Afghanistan · Neyazi et al. (2024) · n = 2,698 · DASS-21 survey"),
+  tags$h1("Layers of Oppression – Mental Health in Afghanistan"),
+  div(class = "byline", "Fanus Ghorjani · 06 May 2026"),
+  tags$p(class = "first", "Oppression does not operate on a single level. It accumulates. Over time, it settles into different layers: material, social and psychological. In Afghanistan, decades of conflict, foreign intervention and economic instability have produced visible and less visible forms of control. These layers do not remain external. They shape how people live, relate and experience themselves. They shape the psyche."),
+  tags$p("A recent study from Afghanistan shows that 72.05% of participants report symptoms of depression, 71.94% anxiety, and 66.49% high levels of stress. These numbers are not simply indicators of a health crisis. They show how deeply psychological distress has become embedded in everyday life. The chart breaks these results down into social layers, including gender, income, education and place of living."),
+  tags$p("At first glance, one pattern dominates: levels of distress are high across all groups. Anxiety and depression rates remain around or above 70%, regardless of category. Mental distress is not confined to specific populations. It is widespread and shared."),
+  div(class = "chart-spacer")
+)
+
+article_after <- div(class = "wrap",
+  div(class = "caption", HTML("<strong>Figure:</strong> Percentages show group share and symptom prevalence within each group. Groups may overlap; values are descriptive and not causal.")),
+  tags$p("The study shows differences between gender and class, but they do not contradict the overall pattern; they layer and intensify it. Where structural pressure is greater, distress becomes more severe. This is where the metaphor of layers becomes critical."),
+  tags$p("The chart shows how multiple forms of pressure accumulate: economic hardship, restricted rights, insecurity and uncertainty do not act in isolation, but build on top of one another. Psychological distress emerges not from a single cause, but from the weight of these combined conditions."),
+  tags$p("Frantz Fanon’s analysis of colonial violence offers a way to understand this accumulation. His point is not only that oppression causes suffering. It is that it reorganizes the psyche. The experience of being controlled and exposed to unpredictable force produces internal tension, anger and a constant anticipation of threat."),
+  tags$p("In this sense violence is not only external, but becomes internalized, layered into how people think, feel and respond to the world. This study does not describe a collection of individual cases, but points to a structured condition."),
+  tags$p("Mental health in Afghanistan is not only a medical issue. It reflects a collective condition formed through the accumulation of these layers. The chart makes this visible: distress is everywhere and in some layers, it becomes more intense."),
+  tags$p("In contexts where oppression is continuous, psychological disorder is not an exception, but an expected outcome. There can be no return to normal when instability itself is the norm. Illness persists because the conditions that produce it remain."),
+  div(class = "sources",
+      HTML("<strong>Sources:</strong> Neyazi et al. (2024), <em>Depression, anxiety and stress among Afghans under Taliban government: a cross-sectional study</em>, <em>Discover Mental Health</em> 4:38, DOI: 10.1007/s44192-024-00090-5. Data shown are based on DASS-21 symptom categories, n = 2,698. Fanon, Frantz (1961/1963), <em>The Wretched of the Earth</em>, translated by Constance Farrington, Grove Press, chapter ‘Colonial War and Mental Disorders’."))
+)
+
+final_page <- interactive_plot %>%
+  htmlwidgets::prependContent(article_css, article_before) %>%
+  htmlwidgets::appendContent(article_after)
+
 htmlwidgets::saveWidget(
-  interactive_plot,
-  file = "chart.html",
-  selfcontained = FALSE,
-  libdir = "lib"
-)
-
-htmlwidgets::prependContent(
-  interactive_plot,
-  tags$style("body { margin:0; }")
-)
-
-htmltools::save_html(
-  browsable(page),
+  final_page,
   file = "layers_of_oppression.html",
-  libdir = "lib"
+  selfcontained = TRUE,
+  title = "Layers of Oppression – Mental Health in Afghanistan"
 )
-
-

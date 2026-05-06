@@ -219,4 +219,10 @@ page <- browsable(tagList(
   )
 ))
 
-save_html(page, file = "layers_of_oppression.html")
+htmltools::save_html(
+  page,
+  file = "index.html",
+  libdir = "lib"
+)
+
+

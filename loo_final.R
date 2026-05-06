@@ -235,9 +235,14 @@ htmlwidgets::saveWidget(
   libdir = "lib"
 )
 
+htmlwidgets::prependContent(
+  interactive_plot,
+  tags$style("body { margin:0; }")
+)
+
 htmltools::save_html(
-  page,
-  file = "index.html",
+  browsable(page),
+  file = "layers_of_oppression.html",
   libdir = "lib"
 )
 

@@ -61,8 +61,15 @@ The percentages shown represent symptom prevalence within each group. Values are
 - `layers_of_oppression.html` → final rendered data bit  
 ---
 
-## View the Article
-You can view the final article here: https://raw.githack.com/fanusghorjani/REPO/main/layers_of_oppression.html
+## Viewing
+
+To view the interactive visualization correctly:
+1. Download the repository as a ZIP file.
+2. Extract the ZIP folder.
+3. Keep `layers_of_oppression.html` and the `lib/` folder together.
+4. Open `layers_of_oppression.html` locally in your browser.
+
+GitHub’s preview may not run the JavaScript needed for the interactive Plotly visualization.
 
 ---
 

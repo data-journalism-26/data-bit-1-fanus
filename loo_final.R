@@ -199,7 +199,14 @@ page <- browsable(tagList(
       
       tags$p("At first glance, one pattern dominates: levels of distress are high across all groups. Anxiety and depression rates remain around or above 70%, regardless of category. Mental distress is not confined to specific populations. It is widespread and shared."),
       
-      div(class = "chart", interactive_plot),
+      div(class = "chart",
+          tags$iframe(
+            src = "chart.html",
+            title = "Interactive mental health visualization",
+            style = "width:100%; height:520px; border:0; display:block; overflow:hidden; background:#F7F3EE;",
+            scrolling = "no"
+          )
+      ),
       div(class = "caption", HTML("<strong>Figure:</strong> Percentages show group share and symptom prevalence within each group. Groups may overlap; values are descriptive and not causal.")),
       
       tags$p("The study shows differences between gender and class, but they do not contradict the overall pattern; they layer and intensify it. Where structural pressure is greater, distress becomes more severe. This is where the metaphor of layers becomes critical."),
@@ -218,6 +225,15 @@ page <- browsable(tagList(
           HTML("<strong>Sources:</strong> Neyazi et al. (2024), <em>Depression, anxiety and stress among Afghans under Taliban government: a cross-sectional study</em>, <em>Discover Mental Health</em> 4:38, DOI: 10.1007/s44192-024-00090-5. Data shown are based on DASS-21 symptom categories, n = 2,698. Fanon, Frantz (1961/1963), <em>The Wretched of the Earth</em>, translated by Constance Farrington, Grove Press, chapter ‘Colonial War and Mental Disorders’."))
   )
 ))
+
+# Save the Plotly widget as its own page so htmlwidgets initializes cleanly.
+# index.html embeds this file via iframe, preserving hover/interactivity.
+htmlwidgets::saveWidget(
+  interactive_plot,
+  file = "chart.html",
+  selfcontained = FALSE,
+  libdir = "lib"
+)
 
 htmltools::save_html(
   page,
